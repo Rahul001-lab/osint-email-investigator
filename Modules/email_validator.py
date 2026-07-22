@@ -25,3 +25,24 @@ def extract_tld(email):
     Extract the top-level domain (TLD) from an email address.
     """
     return email.split(".")[-1]
+
+def analyze_email(email):
+    """"
+    Analyze an email address and return useful information
+    """
+    is_valid = validate_email(email)
+    
+    if is_valid == False:
+        return {
+    "valid": False
+    }
+    
+    user_name = extract_username(email)
+    domain = extract_domain(email)
+    tld = extract_tld(email)
+
+    return {"valid": is_valid,
+           "username": user_name,
+            "domain": domain,
+             "tld": tld
+               }
