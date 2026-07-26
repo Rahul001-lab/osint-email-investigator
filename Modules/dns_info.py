@@ -2,20 +2,30 @@ import dns.resolver
 
 def get_dns_records(domain):
     try:
-        dns_record_A = dns.resolver.resolve(domain, "A")
+        record_types = ["A", "AAAA", "MX", "NS", "TXT"]
 
-        ip_addresses = []
+        dns_records = {}
 
-        for record in dns_record_A:
-            ip_addresses.append(str(record))
+        for record_type in record_types:
+            ip_addresses = []
+            try:
 
+                dns_data = dns.resolver.resolve(domain, record_type)
+
+                for record in dns_data:
+                      ip_addresses.append(str(record))
+
+                dns_records[record_type] = ip_addresses
+
+            except Exception:
+                continue
         return {
-            "success": True,
-            "A": ip_addresses
+            "success" : True,
+            "dns_records": dns_records
         }
 
     except Exception as e:
         return { 
             "success": False,
-            "error": "Unable to fetch DNS A records."
+            "error": "Unable to fetch DNS records."
         }
