@@ -1,11 +1,7 @@
 import customtkinter as ctk
 from tkinter import END
 
-from parser import parse_email
-from github_intel import github_lookup
-from whois_info import whois_lookup
-from dns_info import get_dns_records
-from domain_info import get_ip
+from modules.email_detector import investigate_email
 
 
 class EmailOSINTGUI:
@@ -18,11 +14,16 @@ class EmailOSINTGUI:
         self.root = ctk.CTk()
 
         self.root.title("Email OSINT Investigator")
-        self.root.geometry("900x700")
+        self.root.geometry("900x650")
+        self.root.resizable(False, False)
+
+        self.create_widgets()
+
+    def create_widgets(self):
 
         self.title = ctk.CTkLabel(
             self.root,
-            text="Email OSINT Investigator",
+            text="EMAIL OSINT INVESTIGATOR",
             font=("Arial", 28, "bold")
         )
 
@@ -34,11 +35,11 @@ class EmailOSINTGUI:
 
         self.email_entry = ctk.CTkEntry(
             self.input_frame,
-            placeholder_text="Enter Email Address",
-            width=500
+            width=500,
+            placeholder_text="Enter Email Address"
         )
 
-        self.email_entry.pack(side="left", padx=10, pady=15)
+        self.email_entry.pack(side="left", padx=10, pady=10)
 
         self.analyze_button = ctk.CTkButton(
             self.input_frame,
@@ -46,7 +47,7 @@ class EmailOSINTGUI:
             command=self.analyze_email
         )
 
-        self.analyze_button.pack(side="left", padx=10)
+        self.analyze_button.pack(side="left", padx=5)
 
         self.clear_button = ctk.CTkButton(
             self.input_frame,
@@ -54,31 +55,26 @@ class EmailOSINTGUI:
             command=self.clear_results
         )
 
-        self.clear_button.pack(side="left")
-
-        self.progress = ctk.CTkProgressBar(self.root)
-
-        self.progress.pack(fill="x", padx=20, pady=15)
-
-        self.progress.set(0)
-
-        self.status = ctk.CTkLabel(
-            self.root,
-            text="Status : Waiting..."
-        )
-
-        self.status.pack()
+        self.clear_button.pack(side="left", padx=5)
 
         self.results = ctk.CTkTextbox(
             self.root,
             width=850,
-            height=450,
-            font=("Consolas", 13)
+            height=430
         )
 
         self.results.pack(padx=20, pady=20)
 
+        self.status = ctk.CTkLabel(
+            self.root,
+            text="Status : Ready"
+        )
+
+        self.status.pack(pady=10)
+
     def analyze_email(self):
+
+        self.results.delete("1.0", END)
 
         email = self.email_entry.get().strip()
 
@@ -86,146 +82,72 @@ class EmailOSINTGUI:
             self.status.configure(text="Status : Please enter an email address.")
             return
 
-        self.results.delete("1.0", END)
+        self.status.configure(text="Status : Investigating...")
 
-        self.progress.set(0.1)
-        self.status.configure(text="Status : Validating Email...")
+        result = investigate_email(email)
 
-        parsed = parse_email(email)
-
-        if not parsed["success"]:
-            self.results.insert(END, parsed["error"])
-            self.status.configure(text="Status : Invalid Email")
-            self.progress.set(0)
+        if not result["success"]:
+            self.results.insert(END, result["error"])
+            self.status.configure(text="Status : Failed")
             return
 
-        data = parsed["data"]
-
-        username = data["username"]
-        domain = data["domain"]
-        tld = data["tld"]
-
-        self.progress.set(0.25)
-        self.status.configure(text="Status : Searching GitHub...")
-
-        github = github_lookup(username)
-
-        self.progress.set(0.50)
-        self.status.configure(text="Status : Fetching WHOIS...")
-
-        whois = whois_lookup(domain)
-
-        self.progress.set(0.75)
-        self.status.configure(text="Status : Fetching DNS Records...")
-
-        dns = get_dns_records(domain)
-
-        self.progress.set(0.90)
-        self.status.configure(text="Status : Resolving IP Address...")
-
-        ip = get_ip(domain)
-
-        if ip is None:
-          ip = "Not Found"
-
-        self.progress.set(1)
-
-        self.status.configure(text="Status : Analysis Completed")
+        email_info = result["email_info"]
 
         self.results.insert(END, "========== EMAIL ==========\n\n")
-
-        self.results.insert(END, f"Email      : {email}\n")
-        self.results.insert(END, f"Username   : {username}\n")
-        self.results.insert(END, f"Domain     : {domain}\n")
-        self.results.insert(END, f"TLD        : {tld}\n")
-        self.results.insert(END, f"IP Address : {ip}\n\n")
+        self.results.insert(END, f"Email      : {email_info['email']}\n")
+        self.results.insert(END, f"Username   : {email_info['username']}\n")
+        self.results.insert(END, f"Domain     : {email_info['domain']}\n")
+        self.results.insert(END, f"TLD        : {email_info['tld']}\n\n")
 
         self.results.insert(END, "========== GITHUB ==========\n\n")
+        github = result["github"]
 
         if github["success"]:
-
-            info = github["github_info"]
-
-            for key, value in info.items():
+            for key, value in github["github_info"].items():
                 self.results.insert(
                     END,
-                    f"{key.replace('_',' ').title()} : {value}\n"
+                    f"{key.replace('_', ' ').title()} : {value}\n"
                 )
-
         else:
             self.results.insert(END, github["error"] + "\n")
 
-        self.results.insert(END, "\n")
+        self.results.insert(END, "\n========== WHOIS ==========\n\n")
 
-        self.results.insert(END, "========== WHOIS ==========\n\n")
+        whois = result["whois"]
 
         if whois["success"]:
-
-            self.results.insert(
-                END,
-                f"Registrar : {whois['registrar']}\n"
-            )
-
-            self.results.insert(
-                END,
-                f"Creation Date : {whois['creation_date']}\n"
-            )
-
-            self.results.insert(
-                END,
-                f"Expiration Date : {whois['expiration_date']}\n"
-            )
-
-            self.results.insert(
-                END,
-                f"Name Servers : {whois['name_servers']}\n"
-            )
-
+            self.results.insert(END, f"Registrar : {whois['registrar']}\n")
+            self.results.insert(END, f"Creation Date : {whois['creation_date']}\n")
+            self.results.insert(END, f"Expiration Date : {whois['expiration_date']}\n")
+            self.results.insert(END, f"Name Servers : {whois['name_servers']}\n")
         else:
+            self.results.insert(END, whois["error"] + "\n")
 
-            self.results.insert(
-                END,
-                whois["error"] + "\n"
-            )
+        self.results.insert(END, "\n========== DNS ==========\n\n")
 
-        self.results.insert(END, "\n")
-
-        self.results.insert(END, "========== DNS RECORDS ==========\n\n")
+        dns = result["dns"]
 
         if dns["success"]:
-
             for record, values in dns["dns_records"].items():
-
-                self.results.insert(
-                    END,
-                    f"{record} Records\n"
-                )
+                self.results.insert(END, f"{record} Records\n")
 
                 for value in values:
-                    self.results.insert(
-                        END,
-                        f"   {value}\n"
-                    )
+                    self.results.insert(END, f"   {value}\n")
 
                 self.results.insert(END, "\n")
-
         else:
+            self.results.insert(END, dns["error"] + "\n")
 
-            self.results.insert(
-                END,
-                dns["error"] + "\n"
-            )
+        self.results.insert(END, "\n========== IP ==========\n\n")
+        self.results.insert(END, f"{result['ip']}\n")
 
+        self.status.configure(text="Status : Completed")
 
     def clear_results(self):
 
         self.email_entry.delete(0, END)
-
         self.results.delete("1.0", END)
-
-        self.progress.set(0)
-
-        self.status.configure(text="Status : Waiting...")
+        self.status.configure(text="Status : Ready")
 
     def run(self):
         self.root.mainloop()
