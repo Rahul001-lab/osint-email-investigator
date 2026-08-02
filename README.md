@@ -1,121 +1,188 @@
-# OSINT Email Investigator
+# 📧 Email OSINT Investigator
 
-A Python-based Open Source Intelligence (OSINT) tool designed to collect publicly available intelligence related to an email address.
-
-> **Project Status:** 🚧 Under Development
+A Python-based Email OSINT (Open Source Intelligence) tool that collects publicly available information related to an email address. The application features a modern GUI built with CustomTkinter and a modular architecture for easy maintenance and future expansion.
 
 ---
 
-## Project Goal
+## ✨ Features
 
-The objective of this project is **not to validate email addresses**, but to gather intelligence from publicly available sources that can assist during cybersecurity investigations and OSINT analysis.
-
-Given an email address, the tool will collect relevant information such as domain details, DNS records, public profiles, breach information (where available), and other publicly accessible intelligence.
-
----
-
-## Current Features
-
-- ✅ Email parsing and basic input validation
-- ✅ Domain information lookup
-- ✅ WHOIS lookup
-- ✅ DNS record enumeration
-  - A Records
-  - AAAA Records
-  - MX Records
-  - NS Records
-  - TXT Records
+- Email validation
+- Username extraction
+- Domain extraction
+- Top-Level Domain (TLD) extraction
+- GitHub username lookup
+- WHOIS lookup
+- DNS record lookup
+- IP address resolution
+- Modern desktop GUI
+- Modular architecture
 
 ---
 
-## Planned OSINT Modules
-
-### Core Intelligence
-- 🔄 Email Parser
-- 🔄 GitHub Intelligence
-- 🔄 Reddit Intelligence
-- 🔄 Gravatar Lookup
-- 🔄 Search Engine Intelligence
-- 🔄 Public Profile Discovery
-
-### Infrastructure Intelligence
-- 🔄 Domain Information
-- ✅ WHOIS Lookup
-- ✅ DNS Enumeration
-- 🔄 Domain Age Analysis
-
-### Breach Intelligence
-- ⏳ Have I Been Pwned Integration (API Required)
-
-### Reporting
-- 🔄 Risk Assessment
-- 🔄 Report Generator
-- 🔄 Command Line Interface
-- 🔄 GUI
-
----
-
-## Project Structure
+## 📂 Project Structure
 
 ```
-OSINT Email Investigator/
+Email-OSINT-Investigator/
 │
-├── parser.py
-├── domain_info.py
-├── whois_info.py
-├── dns_info.py
-├── github_intel.py
-├── reddit_intel.py
-├── gravatar_intel.py
-├── search_engine_intel.py
-├── breach_checker.py
-├── report_generator.py
 ├── main.py
-└── README.md
+├── gui.py
+├── README.md
+├── requirements.txt
+│
+├── modules/
+│   ├── __init__.py
+│   ├── email_detector.py
+│   ├── parser.py
+│   ├── github_intel.py
+│   ├── whois_lookup.py
+│   ├── dns_info.py
+│   └── dns_lookup.py
+│
+├── screenshots/
+│
+└── .gitignore
 ```
 
 ---
 
-## Technologies Used
+## 🛠 Technologies Used
 
 - Python 3
+- CustomTkinter
 - Requests
-- python-whois
+- Python-WHOIS
 - dnspython
-- JSON
-- REST APIs
+- Regular Expressions (re)
+- Socket Programming
 
 ---
 
-## Learning Objectives
+## ⚙️ Installation
 
-This project is being developed to strengthen practical skills in:
+Clone the repository
 
-- Python Programming
-- Open Source Intelligence (OSINT)
-- Networking Fundamentals
-- DNS and WHOIS Analysis
-- API Integration
-- Cybersecurity Automation
-- Modular Software Design
-- Error Handling
-- Report Generation
+```bash
+git clone https://github.com/YOUR_USERNAME/email-osint-investigator.git
+```
+
+Move into the project folder
+
+```bash
+cd email-osint-investigator
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the application
+
+```bash
+python main.py
+```
 
 ---
 
-## Future Scope
+## 🔍 Information Collected
 
-- VirusTotal Integration
-- Have I Been Pwned Integration
-- Shodan Integration
-- SecurityTrails Integration
-- IntelligenceX Integration
-- Multi-source OSINT Correlation
-- PDF Report Generation
-- Graphical User Interface (GUI)
+### Email Information
+
+- Email Address
+- Username
+- Domain
+- Top-Level Domain (TLD)
+
+### GitHub Intelligence
+
+- Username
+- Name
+- Bio
+- Company
+- Location
+- Public Repositories
+- Followers
+- Following
+- Profile URL
+
+### WHOIS Information
+
+- Registrar
+- Creation Date
+- Expiration Date
+- Name Servers
+
+### DNS Records
+
+- A Records
+- AAAA Records
+- MX Records
+- NS Records
+- TXT Records
+
+### Domain Resolution
+
+- Public IP Address
 
 ---
 
-## License
+## 🏗 Architecture
 
-This project is intended for educational and cybersecurity learning purposes only.
+```
+                User
+                  │
+                  ▼
+              main.py
+                  │
+                  ▼
+               gui.py
+                  │
+                  ▼
+     modules/email_detector.py
+                  │
+      ┌───────────┼──────────────┐
+      ▼           ▼              ▼
+ parser.py   github_intel.py   whois_lookup.py
+                  │
+                  ▼
+             dns_info.py
+                  │
+                  ▼
+             dns_lookup.py
+```
+
+---
+
+## 🚀 Future Improvements
+
+- Gravatar Lookup
+- Social Media Search
+- Data Breach Detection
+- Email Reputation Check
+- Domain Reputation Analysis
+- Geolocation Lookup
+- PDF Report Export
+- Risk Score Calculation
+- Background Threading
+- Dark/Light Theme Support
+
+---
+
+## 📸 Screenshots
+
+Screenshots will be added after project completion.
+
+---
+
+## 👨‍💻 Author
+
+**Rahul Tewatia**
+
+Cybersecurity Enthusiast | Python Developer | Networking Learner
+
+---
+
+## 📄 License
+
+This project is intended for educational and ethical OSINT purposes only.
