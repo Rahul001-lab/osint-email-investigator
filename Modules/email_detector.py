@@ -3,7 +3,7 @@ from modules.github_intel import github_lookup
 from modules.whois_lookup import whois_lookup
 from modules.dns_info import get_dns_records
 from modules.dns_lookup import get_ip
-
+from modules.geolocation import get_geolocation
 
 def investigate_email(email):
 
@@ -22,6 +22,7 @@ def investigate_email(email):
     whois = whois_lookup(domain)
     dns = get_dns_records(domain)
     ip = get_ip(domain)
+    geolocation = get_geolocation(ip)
 
     return {
         "success": True,
@@ -29,5 +30,6 @@ def investigate_email(email):
         "github": github,
         "whois": whois,
         "dns": dns,
-        "ip": ip
+        "ip": ip,
+        "geolocation": geolocation
     }

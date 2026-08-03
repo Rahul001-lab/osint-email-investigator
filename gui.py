@@ -91,6 +91,8 @@ class EmailOSINTGUI:
             self.status.configure(text="Status : Failed")
             return
 
+# Email Information Module
+
         email_info = result["email_info"]
 
         self.results.insert(END, "========== EMAIL ==========\n\n")
@@ -100,6 +102,9 @@ class EmailOSINTGUI:
         self.results.insert(END, f"TLD        : {email_info['tld']}\n\n")
 
         self.results.insert(END, "========== GITHUB ==========\n\n")
+
+ # GitHub Intelligence Module
+
         github = result["github"]
 
         if github["success"]:
@@ -113,6 +118,8 @@ class EmailOSINTGUI:
 
         self.results.insert(END, "\n========== WHOIS ==========\n\n")
 
+# WHOIS Module
+
         whois = result["whois"]
 
         if whois["success"]:
@@ -124,6 +131,8 @@ class EmailOSINTGUI:
             self.results.insert(END, whois["error"] + "\n")
 
         self.results.insert(END, "\n========== DNS ==========\n\n")
+
+# DNS Module
 
         dns = result["dns"]
 
@@ -140,6 +149,61 @@ class EmailOSINTGUI:
 
         self.results.insert(END, "\n========== IP ==========\n\n")
         self.results.insert(END, f"{result['ip']}\n")
+
+# Geolocation Module
+        
+        self.results.insert(END, "\n========== GEOLOCATION ==========\n\n")
+
+        geolocation = result["geolocation"]
+
+        if geolocation["success"]:
+
+            self.results.insert(
+                END,
+                f"Country : {geolocation['country']}\n"
+            )
+
+            self.results.insert(
+                END,
+                f"Region : {geolocation['region']}\n"
+            )
+
+            self.results.insert(
+                END,
+                f"City : {geolocation['city']}\n"
+            )
+
+            self.results.insert(
+                END,
+                f"ZIP : {geolocation['zip']}\n"
+            )
+
+            self.results.insert(
+                END,
+                f"Latitude : {geolocation['lat']}\n"
+            )
+
+            self.results.insert(
+                END,
+                f"Longitude : {geolocation['lon']}\n"
+            )
+
+            self.results.insert(
+                END,
+                f"Timezone : {geolocation['timezone']}\n"
+            )
+
+            self.results.insert(
+                END,
+                f"ISP : {geolocation['isp']}\n"
+            )
+
+        else:
+
+            self.results.insert(
+                END,
+                geolocation["error"] + "\n"
+            )
 
         self.status.configure(text="Status : Completed")
 
