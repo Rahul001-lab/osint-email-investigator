@@ -1,3 +1,6 @@
+from typing import Self
+from unittest import result
+
 import customtkinter as ctk
 from tkinter import END
 
@@ -203,6 +206,34 @@ class EmailOSINTGUI:
             self.results.insert(
                 END,
                 geolocation["error"] + "\n"
+            )
+
+        
+
+        # ==========================
+        # GitLab Module
+        # ==========================
+
+        self.results.insert(END, "\n========== GITLAB ==========\n\n")
+
+        gitlab = result["gitlab"]
+
+        if gitlab["success"]:
+
+            info = gitlab["gitlab_info"]
+
+            for key, value in info.items():
+
+                self.results.insert(
+                    END,
+                    f"{key.replace('_', ' ').title()} : {value}\n"
+                )
+
+        else:
+
+            self.results.insert(
+                END,
+                gitlab["error"] + "\n"
             )
 
         self.status.configure(text="Status : Completed")

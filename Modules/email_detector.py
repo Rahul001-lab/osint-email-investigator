@@ -4,6 +4,7 @@ from modules.whois_lookup import whois_lookup
 from modules.dns_info import get_dns_records
 from modules.dns_lookup import get_ip
 from modules.geolocation import get_geolocation
+from modules.gitlab_lookup import gitlab_lookup
 
 def investigate_email(email):
 
@@ -23,6 +24,7 @@ def investigate_email(email):
     dns = get_dns_records(domain)
     ip = get_ip(domain)
     geolocation = get_geolocation(ip)
+    gitlab = gitlab_lookup(username)    
 
     return {
         "success": True,
@@ -31,5 +33,6 @@ def investigate_email(email):
         "whois": whois,
         "dns": dns,
         "ip": ip,
-        "geolocation": geolocation
+        "geolocation": geolocation,
+        "gitlab": gitlab
     }
