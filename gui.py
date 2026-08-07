@@ -208,11 +208,7 @@ class EmailOSINTGUI:
                 geolocation["error"] + "\n"
             )
 
-        
-
-        # ==========================
-        # GitLab Module
-        # ==========================
+# GitLab Module
 
         self.results.insert(END, "\n========== GITLAB ==========\n\n")
 
@@ -235,7 +231,15 @@ class EmailOSINTGUI:
                 END,
                 gitlab["error"] + "\n"
             )
+# Sherlock Module
+        self.results.insert(END, "\n========== SHERLOCK ==========\n\n")
+        sherlock = result["sherlock"]
+        if sherlock["success"]:
+            self.results.insert(END, sherlock["sherlock_output"] + "\n")
 
+        else:
+            self.results.insert(END, sherlock["error"] + "\n")
+            
         self.status.configure(text="Status : Completed")
 
     def clear_results(self):
