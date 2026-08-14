@@ -34,3 +34,15 @@ def sherlock_lookup(username):
             "success": False,
             "error": f"Error running Sherlock: {str(e)}"
         }
+
+
+if __name__ == "__main__":
+
+    username = input("Enter Username: ")
+
+    result = sherlock_lookup(username)
+
+    if result["success"]:
+        print(result["sherlock_output"])
+    else:
+        print(result["error"])

@@ -3,6 +3,7 @@ from unittest import result
 
 import customtkinter as ctk
 from tkinter import END
+import threading
 
 from modules.email_detector import investigate_email
 
