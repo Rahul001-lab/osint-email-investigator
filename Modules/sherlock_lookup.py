@@ -5,28 +5,30 @@ def sherlock_lookup(username):
 
     try:
         result = subprocess.run(
-            ["sherlock", username],
-            capture_output=True,
-            text=True,
-            timeout=60
+        ["sherlock", username, "--timeout", "10", "--no-txt"],
+         capture_output=True,
+         text=True,
+        timeout=600
         )
 
-        if result.returncode == 0:
+        output = result.stdout.strip()
+
+        if output:
             return {
                 "success": True,
-                "sherlock_output": result.stdout
+                "sherlock_output": output
             }
 
         else:
             return {
                 "success": False,
-                "error": f"Sherlock command failed with return code {result.returncode}: {result.stderr}"
+                "error": result.stderr.strip() or "Sherlock returned no results."
             }
 
     except subprocess.TimeoutExpired:
         return {
             "success": False,
-            "error": "Sherlock command timed out"
+            "error": "Sherlock command timed out."
         }
 
     except Exception as e:
@@ -34,3 +36,15 @@ def sherlock_lookup(username):
             "success": False,
             "error": f"Error running Sherlock: {str(e)}"
         }
+
+
+if __name__ == "__main__":
+
+    username = input("Enter Username: ")
+
+    result = sherlock_lookup(username)
+
+    if result["success"]:
+        print(result["sherlock_output"])
+    else:
+        print(result["error"])
