@@ -6,6 +6,7 @@ from modules.dns_lookup import get_ip
 from modules.geolocation import get_geolocation
 from modules.gitlab_lookup import gitlab_lookup
 from modules.sherlock_lookup import sherlock_lookup
+from modules.disposable_email import disposable_email
 
 def investigate_email(email):
 
@@ -27,7 +28,8 @@ def investigate_email(email):
     geolocation = get_geolocation(ip)
     gitlab = gitlab_lookup(username)
     sherlock = sherlock_lookup(email)
-
+    disposable_email = disposable_email(email
+                                        )
     return {
         "success": True,
         "email_info": data,
@@ -37,5 +39,6 @@ def investigate_email(email):
         "ip": ip,
         "geolocation": geolocation,
         "gitlab": gitlab,
-        "sherlock": sherlock
+        "sherlock": sherlock,
+        "disposable": disposable_email
     }
