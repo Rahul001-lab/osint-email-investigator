@@ -1,0 +1,5 @@
+customtkinter
+requests
+python-whois
+dnspython
+sherlock-project
