@@ -112,10 +112,12 @@ class EmailOSINTGUI:
 
         except Exception as e:
 
+            error_message = str(e)
+
             self.root.after(
-                0,
-                lambda: self.show_error(str(e))
-            )
+                          0,
+                     lambda: self.show_error(error_message)
+                     )
 
     def display_results(self, result):
 
