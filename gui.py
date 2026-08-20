@@ -411,19 +411,19 @@ class EmailOSINTGUI:
         )
 
     def clear_results(self):
-
-        self.email_entry.delete(0, END)
-
-        self.results.delete("1.0", END)
-
-        self.status.configure(
-            text="Status : Ready"
-        )
-
-        self.analyze_button.configure(
-            state="normal"
-        )
-
+  
+          self.email_entry.delete(0, END)
+  
+          self.results.delete("1.0", END)
+  
+          self.status.configure(
+              text="Status : Ready"
+          )
+  
+          self.analyze_button.configure(
+              state="normal"
+          )
+  
     def run(self):
-
-        self.root.mainloop()
+  
+          self.root.mainloop()
